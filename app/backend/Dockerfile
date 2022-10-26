@@ -3,6 +3,6 @@ WORKDIR /app-backend
 COPY . .
 RUN npm install
 EXPOSE 3001
-ENTRYPOINT [ "" ]
+CMD [ "npm", "start" ]
 
-# Não precisa de comando no Dockerfile do backend, pois já está configurado "npm run dev" como comando no docker-compose.
+# Mesmo que funcione localmente sem ENTRYPOINT/CMD, no github nao funciona, pois o avaliador tenta usar comandos pra subir o projeto :(
