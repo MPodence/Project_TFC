@@ -8,4 +8,9 @@ export interface IUserService {
     message?: string,
     token?: string,
   }>
+
+  validateLogin(token: string): Promise<{
+    message?: string,
+    role?: string,
+  }>
 }
