@@ -15,7 +15,7 @@ const { expect } = chai;
 
 // Mentoria do Ivan de TDD foi muito valiosa pra esse projeto.
 
-describe('Test POST /login', () => {
+describe('Test /login', () => {
   it('Caso email nao for informado, retorna status 400', async () => {
     const httpResponse: Response = await chai.request(app).post('/login').send({ password: 'test' });
     expect(httpResponse.status).to.be.equal(400);
