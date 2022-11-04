@@ -9,8 +9,5 @@ export interface IUserService {
     token?: string,
   }>
 
-  validateLogin(token: string): Promise<{
-    message?: string,
-    role?: string,
-  }>
+  getRole(token: string): Promise<string>
 }

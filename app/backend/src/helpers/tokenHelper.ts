@@ -1,4 +1,5 @@
-import { JwtPayload, sign, verify } from 'jsonwebtoken';
+import { NextFunction, Request, Response } from 'express';
+import { sign, verify } from 'jsonwebtoken';
 
 const jwtSecret = process.env.JWT_SECRET || 'jwt_secret';
 
@@ -8,9 +9,19 @@ class Token {
     return token;
   };
 
-  static validateToken = (token: string): string | JwtPayload => {
-    const decodedToken = verify(token, jwtSecret);
-    return decodedToken;
+  static validateToken = (req: Request, res: Response, next: NextFunction) => {
+    const headerToken = req.header('Authorization');
+    if (!headerToken) {
+      return res.status(401).json({ message: 'Token must be a valid token' });
+    }
+    try {
+      const decodedToken = verify(headerToken, jwtSecret);
+      if (typeof decodedToken === 'string') {
+        next();
+      }
+    } catch (err) {
+      return res.status(401).json({ message: 'Token must be a valid token' });
+    }
   };
 }
 

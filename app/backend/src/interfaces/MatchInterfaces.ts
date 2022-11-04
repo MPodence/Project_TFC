@@ -16,4 +16,13 @@ export interface IMatch {
 export interface IMatchService {
   getMatches(): Promise<IMatch[]>
   getMatchesByStatus(status: boolean): Promise<IMatch[]>
+  createMatch({
+    homeTeam,
+    homeTeamGoals,
+    awayTeam,
+    awayTeamGoals,
+    inProgress,
+  }: IMatch): Promise<IMatch | undefined>;
+  finishMatch(id: string | number): Promise<void>
+  updateMatch(id: string | number, homeTeamGoals: number, awayTeamGoals: number): Promise<void>
 }

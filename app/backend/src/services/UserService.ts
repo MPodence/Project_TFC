@@ -1,7 +1,10 @@
 import { compareSync } from 'bcryptjs';
+import { verify } from 'jsonwebtoken';
 import User from '../database/models/User';
 import { ILogin, IUserService } from '../interfaces/UserInterfaces';
 import Token from '../helpers/tokenHelper';
+
+const jwtSecret = process.env.JWT_SECRET || 'jwt_secret';
 
 class UserService implements IUserService {
   static checkPassword = (loginPas :string, dbPas: string):boolean => compareSync(loginPas, dbPas);
@@ -15,13 +18,13 @@ class UserService implements IUserService {
     return { token };
   };
 
-  validateLogin = async (token: string) => {
-    const emailFromToken = Token.validateToken(token);
-    const data = await User.findOne({ where: { email: emailFromToken } });
+  getRole = async (token: string): Promise<string> => {
+    const decodedToken = verify(token, jwtSecret);
+    const data = await User.findOne({ where: { email: decodedToken } });
     if (!data) {
-      return { message: 'Invalid token' };
+      return 'Token must be a valid token';
     }
-    return { role: data.role };
+    return data.role;
   };
 }
 

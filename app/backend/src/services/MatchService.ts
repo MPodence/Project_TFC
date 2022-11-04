@@ -19,6 +19,36 @@ class MatchService implements IMatchService {
     where: { inProgress: status } });
     return data;
   };
+
+  // Desconstruido para poder forçar true no inProgress
+  createMatch = async ({
+    homeTeam,
+    homeTeamGoals,
+    awayTeam,
+    awayTeamGoals,
+  }: IMatch): Promise<IMatch | undefined> => {
+    const haveHomeTeam = await Team.findOne({ where: { id: homeTeam } });
+    const haveAwayTeam = await Team.findOne({ where: { id: awayTeam } });
+    if (!haveHomeTeam || !haveAwayTeam) {
+      return undefined;
+    }
+    const data = await Match.create({
+      homeTeam,
+      homeTeamGoals,
+      awayTeam,
+      awayTeamGoals,
+      inProgress: true,
+    });
+    return data;
+  };
+
+  finishMatch = async (id: string | number): Promise<void> => {
+    await Match.update({ inProgress: false }, { where: { id } });
+  };
+
+  updateMatch = async (id: string | number, homeTeamGoals: number, awayTeamGoals: number) => {
+    await Match.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
+  };
 }
 
 export default MatchService;

@@ -17,16 +17,17 @@ class UserController {
     return res.status(200).json({ token });
   };
 
-  validateLogin = async (req: Request, res: Response): Promise<Response> => {
+  getRole = async (req: Request, res: Response): Promise<Response> => {
     const headerToken = req.header('Authorization');
+    const invalidTokenErr = 'Token must be a valid token';
     if (!headerToken) {
-      return res.status(403).json({ message: 'Invalid token' });
+      return res.status(401).json({ message: invalidTokenErr });
     }
-    const { message, role } = await this.userService.validateLogin(headerToken);
-    if (message) {
-      return res.status(403).json({ message });
+    const data = await this.userService.getRole(headerToken);
+    if (data === invalidTokenErr) {
+      return res.status(401).json({ message: invalidTokenErr });
     }
-    return res.status(200).json({ role });
+    return res.status(200).json({ role: data });
   };
 }
 
