@@ -3,7 +3,7 @@ import { ITeamService, ITeam } from '../interfaces/TeamInterfaces';
 import TeamService from '../services/TeamService';
 
 class TeamController {
-  teamService: ITeamService;
+  private readonly teamService: ITeamService;
 
   constructor() {
     this.teamService = new TeamService();
